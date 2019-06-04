@@ -1,7 +1,7 @@
 /*
   sendSMS to the specific number
 
-  When the SIM900 receive a request from an SMS, and the context is "back", it sends back the ID of the SIM to the same number.
+  When the SIM800 receive a request from an SMS, and the context is "Data", it sends back the ID of the SIM to the same number.
 
    Davide Gariselli
  */
@@ -23,7 +23,7 @@
 #define GSM_AUTOBAUD_MAX 38400
 
 // Software Serial
-SoftwareSerial SerialAT(3,2);  // RX, TX
+SoftwareSerial SerialAT(3, 2);  // RX, TX
 
 #define TINY_GSM_DEBUG SerialMon
 
@@ -49,7 +49,7 @@ void setUpModem() {
     delay(3000);  // sanity delay
 
     if (!rate) {
-        rate = TinyGsmAutoBaud(SerialAT,GSM_AUTOBAUD_MIN,GSM_AUTOBAUD_MAX);
+        rate = TinyGsmAutoBaud(SerialAT, GSM_AUTOBAUD_MIN, GSM_AUTOBAUD_MAX);
     }
     SerialAT.begin(rate);
 
@@ -121,16 +121,16 @@ void loop() {
         DBG("Says");
         DBG(SMS);
 
+        if (strcmp(SMS.c_str(), "Data")) {
+            DBG("Data request, sending....");
+            String smsSend = "Hello from SIM800, imei: ";
+            smsSend += imei;
+            bool res = modem.sendSMS(ID, smsSend);
+            DBG("SMS:", res ? "OK" : "fail");
+        }
+
         bool rmSMSRead = modem.emptySMSBufferRead();  // delete all sms already readed
         DBG("Del readed sms: ", rmSMSRead ? "OK" : "fail");
-    }
-
-    if (SMS.startsWith("Position")) {
-        DBG("SMS test send");
-        String smsSend = "Hello from SIM900, imei: ";
-        smsSend += imei;
-        bool res = modem.sendSMS(ID, smsSend);
-        DBG("SMS:", res ? "OK" : "fail");
     }
 
     delay(2000);
