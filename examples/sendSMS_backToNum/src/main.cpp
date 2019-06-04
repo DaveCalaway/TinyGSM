@@ -3,14 +3,14 @@
 
   When the SIM900 receive a request from an SMS, and the context is "back", it sends back the ID of the SIM to the same number.
 
-   Davide Gariselli - Mobimentum 2019
+   Davide Gariselli
  */
 
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
 // Select your modem:
-#define TINY_GSM_MODEM_SIM900
+#define TINY_GSM_MODEM_SIM800
 //#define DUMP_AT_COMMANDS
 
 // set GSM PIN, if any
@@ -19,8 +19,11 @@
 // Set serial for debug console (to the Serial Monitor, speed 115200)
 #define SerialMon Serial
 
+#define GSM_AUTOBAUD_MIN 9600
+#define GSM_AUTOBAUD_MAX 38400
+
 // Software Serial
-SoftwareSerial SerialAT(2, 3);  // RX, TX
+SoftwareSerial SerialAT(3,2);  // RX, TX
 
 #define TINY_GSM_DEBUG SerialMon
 
@@ -46,7 +49,7 @@ void setUpModem() {
     delay(3000);  // sanity delay
 
     if (!rate) {
-        rate = TinyGsmAutoBaud(SerialAT);
+        rate = TinyGsmAutoBaud(SerialAT,GSM_AUTOBAUD_MIN,GSM_AUTOBAUD_MAX);
     }
     SerialAT.begin(rate);
 
@@ -76,9 +79,6 @@ void setUpModem() {
 
     String cop = modem.getOperator();
     DBG("Operator:", cop);
-
-    IPAddress local = modem.localIP();
-    DBG("Local IP:", local);
 
     int csq = modem.getSignalQuality();
     DBG("Signal quality:", csq);
