@@ -606,6 +606,7 @@ class TinyGsmSim800 {
         streamSkipUntil('\n');
         streamSkipUntil('\n');
         h = stream.readStringUntil('\n');
+        h.trim(); // trim the white space off the string
         return h;
     }
 
