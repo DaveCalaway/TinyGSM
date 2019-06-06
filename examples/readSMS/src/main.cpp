@@ -23,7 +23,7 @@
 #define GSM_AUTOBAUD_MAX 38400
 
 // Software Serial
-SoftwareSerial SerialAT(3,2); // RX, TX
+SoftwareSerial SerialAT(3, 2);  // RX, TX
 
 #define TINY_GSM_DEBUG SerialMon
 
@@ -48,7 +48,8 @@ void setUpModem() {
     delay(3000);  // sanity delay
 
     if (!rate) {
-        rate = TinyGsmAutoBaud(SerialAT,GSM_AUTOBAUD_MIN,GSM_AUTOBAUD_MAX);
+        rate = TinyGsmAutoBaud(SerialAT, GSM_AUTOBAUD_MIN, GSM_AUTOBAUD_MAX);
+        //rate = TinyGsmAutoBaud(SerialAT);
     }
     SerialAT.begin(rate);
 

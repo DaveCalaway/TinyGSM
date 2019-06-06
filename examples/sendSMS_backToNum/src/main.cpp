@@ -121,7 +121,7 @@ void loop() {
         DBG("Says");
         DBG(SMS);
 
-        if (strcmp(SMS.c_str(), "Data")) {
+        if (SMS == "Data") {
             DBG("Data request, sending....");
             String smsSend = "Hello from SIM800, imei: ";
             smsSend += imei;
